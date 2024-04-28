@@ -1,11 +1,11 @@
 const fs = require('fs');
-const path = require('path');
+const path = require('node:path');
 
-// Function to read a JSON file
+// Функція для читання JSON-файлу
 function readJSONFile(fileName, callback) {
     fs.readFile(fileName, 'utf8', (error, data) => {
         if (error) {
-            console.error("Error reading file:", error);
+            console.error("Помилка читання файлу:", error);
             return;
         }
 
@@ -13,17 +13,17 @@ function readJSONFile(fileName, callback) {
             const object = JSON.parse(data);
             callback(object);
         } catch (error) {
-            console.error("Error parsing JSON:", error);
+            console.error("Помилка розбору JSON:", error);
         }
     });
 }
 
-// Function to find a user by their id
+// Функція для пошуку користувача за їхнім id
 function findUserById(id, users) {
     return users.find(user => user.id === id);
 }
 
-// Function to display user information
+// Функція для відображення інформації про користувача
 function getInfo(user) {
     // Проходимося по кожній властивості об'єкта
     for (const key in user) {
@@ -42,18 +42,18 @@ function getInfo(user) {
     }
 }
 
-// Specify the correct path to unique_users.json
+// Вказуємо правильний шлях до unique_users.json
 const filePath = path.join(__dirname, 'unique_users.json');
 
-// Read the unique_users.json file and find the user with number '0045'
+// Читаємо файл unique_users.json та знаходимо користувача з id '0045'
 readJSONFile(filePath, (users) => {
     const user = findUserById('0045', users);
     if (user) {
         getInfo(user);
         console.log("\nОновлені дані:");
-        user.gender = 'PHP software engineer'; // Modify the user data
-        getInfo(user); // Display updated user information
+        user.gender = 'PHP software engineer'; // Змінюємо дані користувача
+        getInfo(user); // Відображаємо оновлену інформацію про користувача
     } else {
-        console.log("User with such number not found.");
+        console.log("Користувач з таким id не знайдений.");
     }
 });
