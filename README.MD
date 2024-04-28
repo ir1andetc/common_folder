@@ -1,0 +1,1 @@
+This folder is created to store code for tasks that does not require connection with non JS files 
