@@ -41,7 +41,7 @@ const company = {
     ]
   };
   
-  function findValueByKey(companyName, company, isLastObject = false, parentCompany = null, foundCompanies = []) {
+  function findValueByKey(companyName, company, parentCompany = null, foundCompanies = []) {
     try {
         // Перевіряємо, чи JSON валідний
         if (typeof company === 'string') {
@@ -50,16 +50,10 @@ const company = {
 
         // Перевіряємо, чи це шукана компанія
         if (company.name === companyName) {
-            // Якщо це останній об'єкт в ієрархії і ми не перевіряємо його батьківську компанію,
-            // додаємо поточну компанію до масиву знайдених
-            if (isLastObject && !parentCompany) {
-                foundCompanies.push({ company, parentCompany: null });
-            } else {
-                foundCompanies.push({ company, parentCompany });
-            }
+            foundCompanies.push({ company, parentCompany });
         }
 
-        // Якщо не знайдено компанію з вказаною назвою, перевіряємо всі підкомпанії та партнерів
+        // Перевіряємо, чи є підкомпанії або партнери
         const entities = [...(company.clients || []), ...(company.partners || [])];
         
         // Сортуємо масив об'єктів за назвою або createdAt, якщо властивість доступна
@@ -72,7 +66,7 @@ const company = {
         
         for (const entity of entities) {
             // Рекурсивно викликаємо findValueByKey для кожного клієнта або партнера
-            findValueByKey(companyName, entity, isLastObject, company, foundCompanies);
+            findValueByKey(companyName, entity, company, foundCompanies);
         }
 
         // Повертаємо масив знайдених компаній
@@ -83,7 +77,7 @@ const company = {
     }
 }
 
-const result = findValueByKey('Клієнт 1', company, true);
+const result = findValueByKey('Клієнт 1.1', company);
 if (result && result.length > 0) {
     console.log('Знайдені компанії:');
     result.forEach(({ company: companyInfo, parentCompany }) => {
